@@ -24,7 +24,7 @@ def parse(data: pd.DataFrame) -> list[dict]:
 
 def export(json_data: list[dict], out_path: str) -> None:
     with open(out_path, "w", encoding="utf-8") as f:
-        f.write(json.dumps(json_data, indent=4, sort_keys=True))
+        f.write(json.dumps(json_data, indent=4))
 
 
 def main():

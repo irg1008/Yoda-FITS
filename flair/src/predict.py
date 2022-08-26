@@ -1,27 +1,25 @@
-from transformers.models.auto.tokenization_auto import AutoTokenizer
-from lightning_transformers.task.nlp.summarization import SummarizationTransformer
-import pytorch_lightning as pl
-
 from os import path
+
+from transformers.models.auto.modeling_auto import AutoModelForSeq2SeqLM
+from transformers.models.auto.tokenization_auto import AutoTokenizer
 
 
 def main():
-    models_path = path.join(path.dirname(__file__), "../models/lightning_logs")
-    version_path = path.join(models_path, "version_0")
+    models_path = path.join(path.dirname(__file__), "../models")
+    model_path = path.join(models_path, "test")
 
-    model_path = path.join(version_path, "checkpoints/epoch=0-step=297.ckpt")
+    model = AutoModelForSeq2SeqLM.from_pretrained(model_path)
+    tokenizer = AutoTokenizer.from_pretrained(model_path)
 
-    tokenizer = AutoTokenizer.from_pretrained(pretrained_model_name_or_path="t5-base")
+    text = """
+    Vladimir Ilyich Ulyanov[b] (22 April [O.S. 10 April] 1870 – 21 January 1924), better known as Vladimir Lenin,[c] was a Russian revolutionary, politician, and political theorist. He served as the first and founding head of government of Soviet Russia from 1917 to 1924 and of the Soviet Union from 1922 to 1924. Under his administration, Russia, and later the Soviet Union, became a one-party socialist state governed by the Communist Party. Ideologically a Marxist, his developments to the ideology are called Leninism."""
+    
+    inputs = tokenizer(text, return_tensors="pt")
+    outputs = model.generate(**inputs)
 
-    model = SummarizationTransformer.load_from_checkpoint(
-        model_path, tokenizer=tokenizer
-    )
-
-    model.hf_predict(
-        "The results found significant improvements over all tasks evaluated",
-        min_length=2,
-        max_length=12,
-    )
+    # Get the result.
+    prediction = tokenizer.decode(outputs[0], skip_special_tokens=True)
+    print(prediction)
 
 
 if __name__ == "__main__":
