@@ -1,32 +1,28 @@
-from flair.data import Sentence
-from flair.models import SequenceTagger
+from transformers.models.auto.tokenization_auto import AutoTokenizer
+from lightning_transformers.task.nlp.summarization import SummarizationTransformer
+import pytorch_lightning as pl
+
 from os import path
 
 
-def load_model(path: str) -> SequenceTagger:
-    return SequenceTagger.load(path)
+def main():
+    models_path = path.join(path.dirname(__file__), "../models/lightning_logs")
+    version_path = path.join(models_path, "version_0")
 
+    model_path = path.join(version_path, "checkpoints/epoch=0-step=297.ckpt")
 
-def get_sentence(text: str) -> Sentence:
-    return Sentence(text)
+    tokenizer = AutoTokenizer.from_pretrained(pretrained_model_name_or_path="t5-base")
 
+    model = SummarizationTransformer.load_from_checkpoint(
+        model_path, tokenizer=tokenizer
+    )
 
-def predict(model: SequenceTagger, sentence: Sentence) -> Sentence:
-    model.predict(sentence)
-    return sentence
-
-
-def main(text: str):
-    model_path = path.join(path.dirname(__file__), "../models/")
-    model = load_model(model_path + "s/best-model.pt")
-
-    sentence = get_sentence(text)
-    predict(model, sentence)
-
-    print(sentence.to_tagged_string())
+    model.hf_predict(
+        "The results found significant improvements over all tasks evaluated",
+        min_length=2,
+        max_length=12,
+    )
 
 
 if __name__ == "__main__":
-    text = "ImseVimse - Bañador-pañal imsevimse con volante L naranja"
-
-    main(text)
+    main()

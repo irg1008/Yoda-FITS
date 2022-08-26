@@ -48,11 +48,15 @@ def duplicate_data(data: pd.DataFrame) -> pd.DataFrame:
     return pd.concat([data, data_upper, data_capitalize, data_lower])
 
 
+def read_csv(csv_path: str):
+    return pd.read_csv(csv_path)
+
+
 def main():
     data_folder = path.join(path.dirname(__file__), "../data/")
     splits_folder = data_folder + "splits/"
 
-    data = pd.read_csv(data_folder + "titles.csv")
+    data = read_csv(data_folder + "titles.csv")
     # data = duplicate_data(data)
 
     train_data, val_data, test_data = split(data, TRAIN, VAL, 1.0 - TRAIN - VAL)
