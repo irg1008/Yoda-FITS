@@ -22,7 +22,7 @@ def get_model(checkpoint: str):
 
 
 def get_arguments(output_dir: str) -> Seq2SeqTrainingArguments:
-    batch_size = 8
+    batch_size = 4
     return Seq2SeqTrainingArguments(
         output_dir=path.join(output_dir, "logs"),
         evaluation_strategy=IntervalStrategy.EPOCH,
@@ -96,7 +96,7 @@ def train():
     tokenized_dataset = tokenize_dataset(tokenizer, dataset)
 
     trainer = get_trainer(model, tokenizer, args, data_collator, tokenized_dataset)
-t    trainer.train()
+    trainer.train()
 
     model.save_pretrained(model_path)
     tokenizer.save_pretrained(model_path)
