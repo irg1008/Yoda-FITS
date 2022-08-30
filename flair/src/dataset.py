@@ -27,6 +27,8 @@ def get_dataset() -> DatasetDict:
 def tokenize_dataset(
     tokenizer: PreTrainedTokenizerBase, dataset: DatasetDict
 ) -> DatasetDict:
+    print(dataset)
+
     def preprocess_function(examples):
         prefix = ""
         inputs = [prefix + doc for doc in examples["text"]]

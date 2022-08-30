@@ -1,5 +1,3 @@
-from os import path
-
 from datasets.dataset_dict import DatasetDict
 from transformers.data.data_collator import DataCollator, DataCollatorForSeq2Seq
 from transformers.modeling_utils import PreTrainedModel
@@ -7,7 +5,7 @@ from transformers.tokenization_utils_base import PreTrainedTokenizerBase
 from transformers.trainer_seq2seq import Seq2SeqTrainer
 from transformers.training_args import TrainingArguments
 
-from config import get_arguments
+from config import get_arguments, get_model_path
 from dataset import get_dataset, tokenize_dataset
 from model import get_model_and_tokenizer
 
@@ -34,11 +32,10 @@ def get_data_collator(model: PreTrainedModel, tokenizer: PreTrainedTokenizerBase
 
 
 def train():
-    models_path = path.abspath(path.join(path.dirname(__file__), "../models/"))
-    model_path = path.join(models_path, "test")
+    model_path = get_model_path()
 
     # Hyperparameters.
-    args = get_arguments(models_path)
+    args = get_arguments(model_path)
 
     # Model, tokenizer and collator.
     model, tokenizer = get_model_and_tokenizer()
