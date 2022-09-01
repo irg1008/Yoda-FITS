@@ -1,13 +1,10 @@
 from transformers.models.auto.modeling_auto import AutoModelForSeq2SeqLM
 from transformers.models.auto.tokenization_auto import AutoTokenizer
-from config import get_model_path
+from model import get_model_and_tokenizer
 
 
 def main():
-    model_path = get_model_path()
-
-    model = AutoModelForSeq2SeqLM.from_pretrained(model_path)
-    tokenizer = AutoTokenizer.from_pretrained(model_path)
+    model, tokenizer = get_model_and_tokenizer()
 
     text = """
         HUAWEI Watch FIT - Smartwatch con Cuerpo de Metal, Pantalla AMOLED de 1.64”, hasta 10 días de batería, 96 Modos de Entrenamiento, GPS Incorporado, 5ATM, Color Rojo

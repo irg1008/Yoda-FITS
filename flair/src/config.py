@@ -6,7 +6,13 @@ from transformers.training_args_seq2seq import Seq2SeqTrainingArguments
 
 
 def get_model_path(model_name="mt5"):
-    return path.join(path.dirname(__file__), "../models", model_name)
+    return path.abspath(path.join(path.dirname(__file__), "../models", model_name))
+
+
+def get_onnx_path():
+    onnx_dir = path.abspath(path.join(get_model_path(), "onnx"))
+    onnx_path = path.join(onnx_dir, "onnx_model.onnx")
+    return onnx_dir, onnx_path
 
 
 def get_checkpoint():
@@ -21,14 +27,14 @@ def get_checkpoint():
 
 
 def get_arguments(output_dir: str) -> Seq2SeqTrainingArguments:
-    batch_size = 1
+    batch_size = 4
     return Seq2SeqTrainingArguments(
         output_dir=path.join(output_dir, "logs"),
         evaluation_strategy=IntervalStrategy.STEPS,
         save_strategy=IntervalStrategy.STEPS,
         eval_steps=200,
         save_steps=400,
-        learning_rate=2e-4,
+        learning_rate=1e-3,
         num_train_epochs=20,
         per_device_train_batch_size=batch_size,
         per_device_eval_batch_size=batch_size,
@@ -36,4 +42,6 @@ def get_arguments(output_dir: str) -> Seq2SeqTrainingArguments:
         report_to=["tensorboard"],
         optim=OptimizerNames.ADAMW_TORCH,
         load_best_model_at_end=True,
+        predict_with_generate=True,
+        fp16=False,
     )

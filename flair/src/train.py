@@ -38,7 +38,7 @@ def train():
     args = get_arguments(model_path)
 
     # Model, tokenizer and collator.
-    model, tokenizer = get_model_and_tokenizer()
+    model, tokenizer = get_model_and_tokenizer(use_checkpoint=True)
     data_collator = get_data_collator(model, tokenizer)
 
     # Dataset.

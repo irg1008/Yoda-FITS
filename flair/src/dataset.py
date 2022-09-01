@@ -27,15 +27,14 @@ def get_dataset() -> DatasetDict:
 def tokenize_dataset(
     tokenizer: PreTrainedTokenizerBase, dataset: DatasetDict
 ) -> DatasetDict:
-    print(dataset)
-
     def preprocess_function(examples):
         prefix = ""
         inputs = [prefix + doc for doc in examples["text"]]
-        model_inputs = tokenizer(inputs, max_length=256, truncation=True)
+        model_inputs = tokenizer(inputs, max_length=128, truncation=True)
 
-        with tokenizer.as_target_tokenizer():
-            labels = tokenizer(examples["summary"], max_length=128, truncation=True)
+        labels = tokenizer(
+            text_target=examples["summary"], max_length=128, truncation=True
+        )
 
         model_inputs["labels"] = labels["input_ids"]
         return model_inputs
